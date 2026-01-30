@@ -1,16 +1,38 @@
 const express = require("express");
 require("dotenv").config();
 const app = express();
-const PORT = 4800;
+const PORT = 4880;
 const { name } = require('ejs')
-const monoogse = require('mongoose')
+const monoogse = require('mongoose');
+// const { string } = require("yup");
 const users = [];
 
 app.set('view engine', 'ejs')
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public'))
 
 const port = process.env.PORT;
 const MONGO_URI = process.env.URI;
+const { Schema, model } = monoogse
+
+// schema
+const studentSChema = new Schema({
+    name: String,
+    age: Number,
+    course: String,
+    gender: String,
+    isGraduate: Boolean
+})
+const studentMOdel = model('SQI_STUDENT', studentSChema)
+app.get("/testing", (req, res) => {
+    const big = new studentMOdel({
+        name: 'ope',
+        age: 49,
+        course: 'FIshery',
+        gender: 'Male',
+    })
+    big.save();
+})
 
 
 
@@ -41,10 +63,10 @@ app.post('/enter', (req, res) => {
 
 
 monoogse.connect(MONGO_URI)
-    .then(() => 
-        console.log("Connected to MongoDB"))
-    .catch((err) =>     
-        console.error("Error connecting to MongoDB:", err));
+        .then(() =>
+            console.log("Connected to MongoDB"))
+        .catch((err) =>
+            console.error("Error connecting to MongoDB:", err));
 
 app.get("/", (req, res) => {
     res.send("Hello, World!");
