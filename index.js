@@ -4,6 +4,7 @@ const app = express();
 const PORT = 4880;
 const { name } = require('ejs')
 const monoogse = require('mongoose');
+const { saveStudent, getAllStudents } = require("./Controllers/studentContoller");
 // const { string } = require("yup");
 const users = [];
 
@@ -13,26 +14,32 @@ app.use(express.static('public'))
 
 const port = process.env.PORT;
 const MONGO_URI = process.env.URI;
-const { Schema, model } = monoogse
+// const { Schema, model } = monoogse
 
 // schema
-const studentSChema = new Schema({
-    name: String,
-    age: Number,
-    course: String,
-    gender: String,
-    isGraduate: Boolean
-})
-const studentMOdel = model('SQI_STUDENT', studentSChema)
-app.get("/testing", (req, res) => {
-    const big = new studentMOdel({
-        name: 'ope',
-        age: 49,
-        course: 'FIshery',
-        gender: 'Male',
-    })
-    big.save();
-})
+// const studentSChema = new Schema({
+//     name: { type: String, required: true },
+//     email: { type: String, required: true, unique: true },
+//     age: { type: Number, required: true },
+//     course: { type: String, required: true },
+//     gender: { type: String, required: true },
+//     isGraduate: { type: Boolean, required: true }
+    
+// })
+// const studentMOdel = model('SQI_STUDENT', studentSChema)
+// app.get("/testing", (req, res) => {
+//     const big = new studentMOdel({
+//         name: 'ope',
+//         age: 49,
+//         course: 'FIshery',
+//         gender: 'Male',
+//     })
+//     big.save();
+// })
+
+
+app.get("/teststudents", saveStudent);
+app.get("/allstudents", getAllStudents)
 
 
 
@@ -63,10 +70,10 @@ app.post('/enter', (req, res) => {
 
 
 monoogse.connect(MONGO_URI)
-        .then(() =>
-            console.log("Connected to MongoDB"))
-        .catch((err) =>
-            console.error("Error connecting to MongoDB:", err));
+    .then(() =>
+        console.log("Connected to MongoDB"))
+    .catch((err) =>
+        console.error("Error connecting to MongoDB:", err));
 
 app.get("/", (req, res) => {
     res.send("Hello, World!");
